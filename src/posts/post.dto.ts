@@ -32,3 +32,9 @@ export class CreatePostDto {
 
 }
 
+export class FindPostDto {
+  
+  @IsString()
+  title: string;
+
+}

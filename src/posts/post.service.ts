@@ -8,27 +8,31 @@ import { InjectRepository } from '@nestjs/typeorm';
 import PostEntity from '../entity/post.entity';
 import { EntityNotFoundError } from 'typeorm';
 import { GetPaginatedPostParamDto, CreatePostDto } from './post.dto';
+
+interface Post {
+  title: string;
+  body: string;
+  user: string;
+  sub: string;
+}
+
 @Injectable()
 export class PostService {
   
-  @InjectRepository()
-  constructor(){} 
+    constructor(){} 
 
   async createPost(createPost: CreatePostDto) {
     const { title, body, sub } = createPost;
-    
+    const user = 'it\'s me'
     if (title.trim() === '') {
       throw new NotFoundException('title must not be empty');
     }
-    
     try {
-      const subRecord = await this.subRepo.findOneOrFail({ name: sub });
-
-      const post: Partial<PostEntity> = {
+      const post: Post = {
         title,
         body,
         user,
-        sub: subRecord,
+        sub,
       };
       const result = post //await this.postRepo.create(post).save();
     

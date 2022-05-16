@@ -2,16 +2,18 @@ import {
   Body,
   Req,
   Res,
+  Put,
+  Delete,
   Controller,
-  Get,
-  Param,
+  Get, Param,
   Post,
   Query,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { PostService } from './post.service';
-
+import { Response } from 'express';
+import { CreatePostDto } from './post.dto';
 
 @Controller('posts')
 export class PostController {
@@ -19,16 +21,16 @@ export class PostController {
 
   @Get('/')
   //@UseGuard(JwtAuthGuard)
-  findAll(@Req() req: Request ): string {
+  findAll(): string {
     return 'This action returns posts list';
   }
   
   @Get(':id')
-  findOne(@Req() req: Request){
+  //@UserGaurd() 그리고 권한이 있는지를 확인
+  findOne(@Param() params, @Res() res){
       try {
-          const { id } = req.params
-          const user_id = req.user ? req.user.id: -1
-          return 'post'
+          const { id } = params.id
+          return id
       
       } catch(e) {
         res.status(500).send({ error:e.message })
@@ -37,7 +39,7 @@ export class PostController {
   @Post()
   //@UseGuard(AuthGuard())
   createOne(
-    @Body(ValidationPipe) createPost: CreatePostDto,
+    @Body() createPost: CreatePostDto,
       //  @Body(ValidationPipe) createPost: CreatePostDto
   ) {
 
@@ -46,12 +48,16 @@ export class PostController {
 
 
   @Put(':id')
-  updateOne(@Req req: Request) {
-    return `update${id}`
+  //@UserGaurd()
+  updateOne(
+    @Body() createPost: CreatePostDto,
+    @Param() params) {
+    return `update${params.id}`
   }
 
-  @Delete
-  deleteOne(@Req req: Request) {
+  @Delete(':id')
+  //@UserGaurd()
+  deleteOne() {
     return 'del';
   }
 
