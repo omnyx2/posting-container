@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { Response } from 'express';
-import { CreatePostDto } from './post.dto';
+import { CreatePostDto, GetPaginatedPostParamDto } from './post.dto';
 
 @Controller('posts')
 export class PostController {
@@ -21,8 +21,11 @@ export class PostController {
 
   @Get('/')
   //@UseGuard(JwtAuthGuard)
-  findAll(): string {
-    return 'This action returns posts list';
+  getPosts(
+    @Query() post: GetPaginatedPostParamDto,
+   // @GetUser() user: UserEntity,
+  ) {
+    return this.postService.getPosts(post);//, user);
   }
   
   @Get(':id')
@@ -31,8 +34,10 @@ export class PostController {
       try {
           const { id } = params.id
           return id
+
       
       } catch(e) {
+        console.log(e)
         res.status(500).send({ error:e.message })
   }}
   
@@ -41,18 +46,17 @@ export class PostController {
   createOne(
     @Body() createPost: CreatePostDto,
       //  @Body(ValidationPipe) createPost: CreatePostDto
+    //
   ) {
-
-    return 'none'
+   return this.postService.createPost(createPost); 
   }
-
 
   @Put(':id')
   //@UserGaurd()
   updateOne(
     @Body() createPost: CreatePostDto,
     @Param() params) {
-    return `update${params.id}`
+    return `update ${params.id}`
   }
 
   @Delete(':id')
@@ -60,5 +64,4 @@ export class PostController {
   deleteOne() {
     return 'del';
   }
-
 }

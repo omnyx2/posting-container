@@ -1,0 +1,18 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "omnyx2",
+    "password": "",
+    "entities": ["dist/**/*.entity{.ts,.js}"],
+    "migrations": ["dist/migrations/**/*{.ts,.js}"],
+    "database": "PostDB",
+    "synchronize": true,
+    "cli": {
+
+        "migrationsDir": "src/migrations"
+    },
+    "migrationsTableName": "migrations"
+   
+}
+
