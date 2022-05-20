@@ -13,13 +13,26 @@ import {
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { Response } from 'express';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiProperty,
+  ApiBody,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreatePostDto, GetPaginatedPostParamDto } from './post.dto';
+import PostEntity from 'src/entity/post.entity';
 
+@ApiTags('cats')
 @Controller('posts')
 export class PostController {
   constructor(private postService: PostService) {}
 
   @Get('/')
+  @ApiOperation({ summary: 'Get Post List' })
+  @ApiBody({type: GetPaginatedPostParamDto})
+  @ApiResponse({ status: 403, description: 'Forbidden' })
   //@UseGuard(JwtAuthGuard)
   getPosts(
     @Query() post: GetPaginatedPostParamDto,
@@ -27,10 +40,16 @@ export class PostController {
   ) {
     return this.postService.getPosts(post);//, user);
   }
-  
+
+
+  @ApiResponse({
+    status: 200,
+    description: 'The found record',
+    type: PostEntity,
+  })
   @Get(':id')
   //@UserGaurd() 그리고 권한이 있는지를 확인
-  findOne(@Param() params, @Res() res){
+  getPost(@Param() params, @Res() res){
       try {
           const { id } = params.id
           return id
@@ -42,6 +61,7 @@ export class PostController {
   }}
   
   @Post()
+  @ApiBody({type: CreatePostDto})
   //@UseGuard(AuthGuard())
   createOne(
     @Body() createPost: CreatePostDto,

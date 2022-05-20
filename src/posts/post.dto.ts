@@ -1,10 +1,16 @@
 import { IsNumber, IsString, IsNotEmpty } from 'class-validator';
+import {
+  ApiProperty
+} from '@nestjs/swagger';
 
 export class GetPaginatedPostParamDto {
+  
   @IsNumber()
+  @ApiProperty()
   page: number;
 
   @IsNumber()
+  @ApiProperty()
   count: number;
 
   constructor(page: number, count: number) {
@@ -16,12 +22,15 @@ export class GetPaginatedPostParamDto {
 export class CreatePostDto {
   @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   title: string;
 
   @IsString()
+  @ApiProperty()
   body: string;
 
   @IsString()
+  @ApiProperty()
   sub: string;
 
   constructor(title: string, body: string, sub: string) {
