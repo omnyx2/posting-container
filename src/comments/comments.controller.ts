@@ -6,17 +6,27 @@ import {
   Body,
   Param
 } from '@nestjs/common';
+import { 
+  ApiBearerAuth,
+  ApiOperation,
+  ApiProperty,
+  ApiBody,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 
-import { GetPostParamDto } from './comments.dto';
+import { GetPostParamDto, CreateCommentParamDto } from './comments.dto';
 import { CommentService } from './comments.service';
 
+@ApiTags('comments')
 @Controller('comments')
 export class CommentController {
   constructor(
     private commentService: CommentService
   ) {}
   @Post('/:identifier/:slug')
+  @ApiBody({ type: CreateCommentParamDto })
   // @UseGuards(AuthGuard())
   commentOnPost(
     @Param() getPostParam: GetPostParamDto,
