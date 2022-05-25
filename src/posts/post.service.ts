@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import PostEntity from '../entity/post.entity';
 import { EntityNotFoundError } from 'typeorm';
-import { GetPaginatedPostParamDto, CreatePostDto } from './post.dto';
+import { GetPaginatedPostParamDto, CreatePostDto, GetPostParamDto } from './post.dto';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 
@@ -66,11 +66,11 @@ export class PostService {
     try {
       const posts = await this.postRepo.find({
         order: { createAt: 'DESC' },
+ //       relations: ['comments'],
         // relations: ['comments', 'votes', 'sub'],
         skip: currentPage * postsPerPage,
         take: postsPerPage,
       });
-      console.log(posts)
 //      if (user) {
 //        posts.forEach((p) => p.setUserVote(user));
 //      }
@@ -81,4 +81,25 @@ export class PostService {
       throw new InternalServerErrorException();
     }
   }
+
+  async getPost(getPostParam?: GetPostParamDto ) { //, user: UserEntity) {
+    const { identifier, slug } = getPostParam;
+    try {
+      const post = await this.postRepo.findOne({
+        where: { identifier, slug },
+        relations: ['comments']
+      }
+//        { relations: ['sub', 'votes', 'comments'] },
+      );
+ //     if (user) {
+  //      post.setUserVote(user);
+  //    }
+      return post;
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
+        throw new NotFoundException('Sub not found');
+      }
+      throw new InternalServerErrorException();
+    }
+  }  
 }

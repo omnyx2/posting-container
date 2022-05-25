@@ -21,10 +21,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+
 import { CreatePostDto, GetPaginatedPostParamDto } from './post.dto';
+import { GetPostParamDto } from '../comments/comments.dto';
 import PostEntity from 'src/entity/post.entity';
 
-@ApiTags('cats')
+@ApiTags('posts')
 @Controller('posts')
 export class PostController {
   constructor(private postService: PostService) {}
@@ -41,24 +43,19 @@ export class PostController {
     return this.postService.getPosts(post);//, user);
   }
 
-
   @ApiResponse({
     status: 200,
     description: 'The found record',
     type: PostEntity,
   })
-  @Get(':id')
-  //@UserGaurd() 그리고 권한이 있는지를 확인
-  getPost(@Param() params, @Res() res){
-      try {
-          const { id } = params.id
-          return id
+  @Get('/:identifier/:slug')
+  //@UseGuards(JwtAuthGuard)
+  async getPost(@Param() getPostParam: GetPostParamDto) {//, @GetUser() user: UserEntity) {
+      const post = await this.postService.getPost(getPostParam)//, user);
+      console.log(post)
+      return post
+  }
 
-      
-      } catch(e) {
-        console.log(e)
-        res.status(500).send({ error:e.message })
-  }}
   
   @Post()
   @ApiBody({type: CreatePostDto})
@@ -71,7 +68,7 @@ export class PostController {
    return this.postService.createPost(createPost); 
   }
 
-  @Put(':id')
+  @Put('/:identifier/:slug')
   //@UserGaurd()
   updateOne(
     @Body() createPost: CreatePostDto,
@@ -79,9 +76,10 @@ export class PostController {
     return `update ${params.id}`
   }
 
-  @Delete(':id')
+  @Delete('/:identifier/:slug')
   //@UserGaurd()
   deleteOne() {
     return 'del';
   }
+
 }

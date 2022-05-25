@@ -47,3 +47,18 @@ export class FindPostDto {
   title: string;
 
 }
+
+
+export class GetPostParamDto {
+  @IsString()
+  identifier: string;
+
+  @IsString()
+  slug: string;
+
+  constructor(identifier: string, slug: string) {
+    this.identifier = identifier;
+    this.slug = slug;
+  }
+}
+

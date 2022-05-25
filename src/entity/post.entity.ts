@@ -9,7 +9,7 @@ import {
 } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer';
 import Basee from './basee.entity';
-
+import CommentEntity from './comment.entity';
 @Entity('posts')
 export default class PostEntity extends Basee {
   constructor(post: Partial<PostEntity>) {
@@ -19,7 +19,7 @@ export default class PostEntity extends Basee {
 
   @Index()
   @Column()
-  identifier: string; // 7 Character Id
+  identifier: string; // uuid v4
 
   @Column()
   title: string;
@@ -30,10 +30,22 @@ export default class PostEntity extends Basee {
 
   @Column({ nullable: true, type: 'text' })
   body: string;
-
+  
   @Column()
   subName: string;
 
   @Column()
   username: string;
+  
+  @Exclude()
+  @OneToMany(() => CommentEntity, (comment) => comment.post)
+  comments: CommentEntity[];
+
+  @Expose() get commentCount(): number {
+    return this.comments?.length;
+  }
+
+  @Expose() get commentList(): CommentEntity[] {
+    return this.comments;
+  }
 }
