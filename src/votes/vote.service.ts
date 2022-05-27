@@ -1,24 +1,23 @@
 import {
-  BadRequestException,
-  Injectable,
+  BadRequestException, Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import CommentsEntity from 'src/entity/comment.entity';
-//import { CommentsEntity } from 'src/entities/comments/comments.repository';
+//import { CommentsEntity } from 'src/entities/comment/comments.repository';
 //import { PostEntity } from 'src/entities/post/post.repository';
 //import { SubRepository } from 'src/entities/sub/sub.repository';
 // import UserEntity from 'src/entities/user/user.entity';
 import PostEntity from 'src/entity/post.entity';
-import VotesEntity from 'src/entity/votes.entity';
+import VotesEntity from 'src/entity/vote.entity';
 //import { VotesEntity } from 'src/entities/votes/votes.repository';
-import { VoteDto } from './votes.dto';
+import { VoteDto } from './vote.dto';
 import { Repository } from 'typeorm';
 @Injectable()
 export class VoteService {
   constructor(
-    @InjectRepository(CommentsEntity) private commentsRepo: Repository<CommentsEntity>,
+    @InjectRepository(CommentsEntity) private commentRepo: Repository<CommentsEntity>,
   //  @InjectRepository(SubRepository) private subRepo: SubRepository,
     @InjectRepository(PostEntity) private postRepo: Repository<PostEntity>,
     @InjectRepository(VotesEntity) private voteRepo: Repository<VotesEntity>,
@@ -33,7 +32,7 @@ export class VoteService {
     }
 
     try {
-      let post = await this.postRepo.findOne({ identifier, slug });
+      let post = await this.postRepo.findOne({ where: {identifier, slug} });
       let vote: VotesEntity | undefined;
       let comment: CommentsEntity | undefined;
 
@@ -42,10 +41,10 @@ export class VoteService {
         comment = await this.commentRepo.findOne({
           identifier: commentIdentifier,
         });
-        vote = await this.voteRepo.findOne({ comment }) //user });
+        vote = await this.voteRepo.findOne({where: { comments } }) //user });
       } else {
         // Else find vote by post
-        vote = await this.voteRepo.findOne({post}) // , user });
+        vote = await this.voteRepo.findOne({ where: {post}}) // , user });
       }
 
       if (!vote && value === 0) {
@@ -67,12 +66,13 @@ export class VoteService {
         await vote.save();
       }
 
-      post = await this.postRepo.findOne(
-        { identifier, slug },
-        { relations: ['comments']}///'comments.votes', 'sub', 'votes'] },
+      post = await this.postRepo.findOne({
+        where:{ identifier, slug },
+        relations: ['comments']
+      }///'comment.votes', 'sub', 'votes'] },
       );
       // post.setUserVote(user);
-      // post.comments.forEach((c) => c.setUserVote(user));
+      // post.comment.forEach((c) => c.setUserVote(user));
 
       return post;
     } catch (err) {
