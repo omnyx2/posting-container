@@ -48,6 +48,9 @@ export class FindPostDto {
 
 }
 
+export class DeletePostDto {
+  result: "Del post successed"
+}
 
 export class GetPostParamDto {
   @IsString()

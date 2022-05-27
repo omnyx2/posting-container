@@ -3,7 +3,7 @@ import { PostModule } from './posts/post.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { CommentsModule } from './comments/comments.module';
-import { VotesModule } from './votes/votes.module';
+import { VoteModule } from './votes/vote.module';
 
 @Module({
   imports: [ 
@@ -11,7 +11,7 @@ import { VotesModule } from './votes/votes.module';
     HttpModule,
     PostModule,
     CommentsModule,
-    VotesModule],
+    VoteModule],
 
 })
 export class AppModule {}

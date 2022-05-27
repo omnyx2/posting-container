@@ -14,6 +14,7 @@ import VotesEntity from 'src/entity/vote.entity';
 //import { VotesEntity } from 'src/entities/votes/votes.repository';
 import { VoteDto } from './vote.dto';
 import { Repository } from 'typeorm';
+
 @Injectable()
 export class VoteService {
   constructor(
@@ -39,12 +40,12 @@ export class VoteService {
       if (commentIdentifier) {
         // IF there is a comment identifier find vote by comment
         comment = await this.commentRepo.findOne({
-          identifier: commentIdentifier,
+          where:{ identifier: commentIdentifier }
         });
-        vote = await this.voteRepo.findOne({where: { comments } }) //user });
+        vote = await this.voteRepo.findOne( {relations: ['comment'] }) //user });
       } else {
         // Else find vote by post
-        vote = await this.voteRepo.findOne({ where: {post}}) // , user });
+        vote = await this.voteRepo.findOne( {relations: ['post']}) // , user });
       }
 
       if (!vote && value === 0) {
@@ -57,9 +58,11 @@ export class VoteService {
         if (comment) vote.comment = comment;
         else vote.post = post;
         await this.voteRepo.create(vote).save();
+      
       } else if (value === 0) {
         // If vote exists and value = 0 remove vote from DB
         await vote.remove();
+      
       } else if (vote.value !== value) {
         // If vote and value has changed, update vote
         vote.value = value;

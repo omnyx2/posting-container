@@ -10,7 +10,17 @@ import {
 // import UserEntity from 'src/entities/user/user.entity';
 import { VoteDto } from './vote.dto';
 import { VoteService } from './vote.service';
+import { 
+  ApiBearerAuth,
+  ApiOperation,
+  ApiProperty,
+  ApiBody,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+
+@ApiTags('vote')
 @Controller('api/vote')
 export class VoteController {
   constructor(private voteService: VoteService) {}

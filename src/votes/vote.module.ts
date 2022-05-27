@@ -20,4 +20,4 @@ import { VoteService } from './vote.service';
   providers: [VoteService],
 })
 
-export class VotesModule {}
+export class VoteModule {}

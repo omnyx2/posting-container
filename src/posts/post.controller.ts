@@ -22,7 +22,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { CreatePostDto, GetPaginatedPostParamDto } from './post.dto';
+import { CreatePostDto, DeletePostDto, GetPaginatedPostParamDto } from './post.dto';
 import { GetPostParamDto } from '../comments/comments.dto';
 import PostEntity from 'src/entity/post.entity';
 
@@ -33,7 +33,6 @@ export class PostController {
 
   @Get('/')
   @ApiOperation({ summary: 'Get Post List' })
-  @ApiBody({type: GetPaginatedPostParamDto})
   @ApiResponse({ status: 403, description: 'Forbidden' })
   //@UseGuard(JwtAuthGuard)
   getPosts(
@@ -59,6 +58,11 @@ export class PostController {
   
   @Post()
   @ApiBody({type: CreatePostDto})
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: PostEntity,
+  })
   //@UseGuard(AuthGuard())
   createOne(
     @Body() createPost: CreatePostDto,
@@ -69,7 +73,11 @@ export class PostController {
   }
 
   @Put('/:identifier/:slug')
-  //@UserGaurd()
+   @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: PostEntity
+  })//@UserGaurd()
   updateOne(
     @Body() createPost: CreatePostDto,
     @Param() params) {
@@ -77,6 +85,11 @@ export class PostController {
   }
 
   @Delete('/:identifier/:slug')
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: DeletePostDto
+  })
   //@UserGaurd()
   deleteOne() {
     return 'del';
