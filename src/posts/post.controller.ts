@@ -28,6 +28,7 @@ import PostEntity from 'src/entity/post.entity';
 
 @ApiTags('posts')
 @Controller('posts')
+
 export class PostController {
   constructor(private postService: PostService) {}
 
