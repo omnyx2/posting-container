@@ -2,9 +2,11 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class VoteDto {
+  
   @IsString()
   @ApiProperty()
   identifier: string;
+
 
   @IsString()
   @ApiProperty()

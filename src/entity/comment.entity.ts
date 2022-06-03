@@ -12,7 +12,7 @@ import { Exclude, Expose } from 'class-transformer';
 import Basee from './basee.entity';
 import PostEntity from './post.entity';
 // import { makeId } from 'src/utils/helpers';
-// import VotesEntity from '../votes/votes.entity';
+import VotesEntity from './vote.entity';
 import { v4 as uuid } from 'uuid';
 @Entity('comments')
 export default class CommentEntity extends Basee {
@@ -38,13 +38,13 @@ export default class CommentEntity extends Basee {
   @ManyToOne(() => PostEntity, (post) => post.comments, { nullable: false })
   post: PostEntity;
 
- //  @Exclude()
- //  @OneToMany(() => VotesEntity, (vote) => vote.comment)
- //  votes: VotesEntity[];
+  @Exclude()
+  @OneToMany(() => VotesEntity, (vote) => vote.comment)
+  votes: VotesEntity[];
 
- // @Expose() get voteScore(): number {
- //   return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0);
- //  }
+  @Expose() get voteScore(): number {
+    return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0);
+  }
 
  // protected userVote: number;
  // setUserVote(user: UserEntity) {

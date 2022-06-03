@@ -10,6 +10,8 @@ import {
 import { Exclude, Expose } from 'class-transformer';
 import Basee from './basee.entity';
 import CommentEntity from './comment.entity';
+import VotesEntity from './vote.entity';
+
 @Entity('posts')
 export default class PostEntity extends Basee {
   constructor(post: Partial<PostEntity>) {
@@ -40,6 +42,14 @@ export default class PostEntity extends Basee {
   @Exclude()
   @OneToMany(() => CommentEntity, (comment) => comment.post)
   comments: CommentEntity[];
+  
+  @Exclude()
+  @OneToMany(() => VotesEntity, (vote) => vote.post)
+  votes: VotesEntity[];
+  
+  @Expose() get voteScore(): number {
+    return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0);
+  }
 
   @Expose() get commentCount(): number {
     return this.comments?.length;

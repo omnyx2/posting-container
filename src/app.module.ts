@@ -11,7 +11,8 @@ import { VoteModule } from './votes/vote.module';
     HttpModule,
     PostModule,
     CommentsModule,
-    VoteModule],
+    VoteModule
+  ],
 
 })
 export class AppModule {}
