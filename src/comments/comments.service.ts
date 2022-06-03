@@ -49,7 +49,7 @@ export class CommentService {
       const post = await this.postRepo.findOne({ where: {identifier, slug} });
 
       const comments = await this.commentRepo.find({
-        relations: [ "post"],
+        relations: [ "post", 'votes'],
         order: { createAt: 'DESC' },
       //  relations: ['votes'],
       });

@@ -66,6 +66,7 @@ export class PostService {
     try {
       const posts = await this.postRepo.find({
         order: { createAt: 'DESC' },
+        relations: ['votes'],
  //       relations: ['comments'],
         // relations: ['comments', 'votes', 'sub'],
         skip: currentPage * postsPerPage,
@@ -87,7 +88,7 @@ export class PostService {
     try {
       const post = await this.postRepo.findOne({
         where: { identifier, slug },
-        relations: ['comments']
+        relations: ['comments', 'votes']
       }
 //        { relations: ['sub', 'votes', 'comments'] },
       );

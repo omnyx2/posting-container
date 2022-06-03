@@ -13,6 +13,5 @@
         "migrationsDir": "src/migrations"
     },
     "migrationsTableName": "migrations"
-   
 }
 
