@@ -11,6 +11,7 @@ import { Exclude, Expose } from 'class-transformer';
 import Basee from './basee.entity';
 import CommentEntity from './comment.entity';
 import VotesEntity from './vote.entity';
+import UserEntity from './user.entity';
 
 @Entity('posts')
 export default class PostEntity extends Basee {
@@ -18,6 +19,7 @@ export default class PostEntity extends Basee {
     super();
     Object.assign(this, post);
   }
+
 
   @Index()
   @Column()
@@ -38,10 +40,15 @@ export default class PostEntity extends Basee {
 
   @Column()
   username: string;
+
+  @Exclude()
+  @ManyToOne(() => UserEntity, (user) => user.posts)
+  user: UserEntity;
   
   @Exclude()
   @OneToMany(() => CommentEntity, (comment) => comment.post)
   comments: CommentEntity[];
+
   
   @Exclude()
   @OneToMany(() => VotesEntity, (vote) => vote.post)
@@ -58,4 +65,11 @@ export default class PostEntity extends Basee {
   @Expose() get commentList(): CommentEntity[] {
     return this.comments;
   }
+  
+  protected userVote: number;
+  setUserVote(user: UserEntity) {
+    const index = this.votes?.findIndex((v) => v.username === user.username);
+    this.userVote = index > -1 ? this.votes[index].value : 0;
+  }
+
 }

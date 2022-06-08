@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import CommentsEntity from './comment.entity';
 import Basee from './basee.entity';
 import PostEntity from './post.entity';
-// import UserEntity from './user.entity';
+import UserEntity from './user.entity';
 
 @Entity('votes')
 export default class VotesEntity extends Basee {
@@ -21,10 +21,13 @@ export default class VotesEntity extends Basee {
   @Column()
   username: string;
 
-  @ManyToOne(() => PostEntity)
+  @ManyToOne(() => PostEntity, (post) => post.votes)
   post: PostEntity;
 
-  @ManyToOne(() => CommentsEntity)
+  @ManyToOne(() => CommentsEntity, (comments) => comments.votes )
   comment: CommentsEntity;
+  
+  @ManyToOne(() => UserEntity, (user) => user.votes )
+  user: UserEntity;
 
 }
