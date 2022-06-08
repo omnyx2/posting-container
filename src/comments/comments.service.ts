@@ -32,12 +32,13 @@ export class CommentService {
         username: "writer",
         post,
       };
-
       console.log(comment)
       const result = await this.commentRepo.create(comment).save();
     
       return result;
+
     } catch (error) {
+      
       console.log(error)
       throw new InternalServerErrorException();
     }
@@ -58,6 +59,7 @@ export class CommentService {
       // }
       return comments;
     } catch (error) {
+      
       throw new BadRequestException();
     }
   }}

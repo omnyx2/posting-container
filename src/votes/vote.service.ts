@@ -1,30 +1,39 @@
 import {
   BadRequestException, Injectable,
   InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+  NotFoundException, } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import CommentsEntity from 'src/entity/comment.entity';
 //import { CommentsEntity } from 'src/entities/comment/comments.repository';
 //import { PostEntity } from 'src/entities/post/post.repository';
 //import { SubRepository } from 'src/entities/sub/sub.repository';
-// import UserEntity from 'src/entities/user/user.entity';
+import UserEntity from 'src/entity/user.entity';
 import PostEntity from 'src/entity/post.entity';
 import VotesEntity from 'src/entity/vote.entity';
+import { CommentRepository } from 'src/entity/comment.repository';
+import { PostRepository } from 'src/entity/post.repository';
+import { VoteRepository } from 'src/entity/vote.repository';
+
+
 //import { VotesEntity } from 'src/entities/votes/votes.repository';
 import { VoteDto } from './vote.dto';
 import { Repository } from 'typeorm';
+import { GetUser } from '../util/authCtx';
+
 
 @Injectable()
 export class VoteService {
   constructor(
-    @InjectRepository(CommentsEntity) private commentRepo: Repository<CommentsEntity>,
-  //  @InjectRepository(SubRepository) private subRepo: SubRepository,
-    @InjectRepository(PostEntity) private postRepo: Repository<PostEntity>,
-    @InjectRepository(VotesEntity) private voteRepo: Repository<VotesEntity>,
+//     @InjectRepository(CommentsEntity) private commentRepo: Repository<CommentsEntity>,
+//   //  @InjectRepository(SubRepository) private subRepo: SubRepository,
+//     @InjectRepository(PostEntity) private postRepo: Repository<PostEntity>,
+//     @InjectRepository(VotesEntity) private voteRepo: Repository<VotesEntity>
+    @InjectRepository(CommentRepository) private commentRepo: CommentRepository,
+    @InjectRepository(PostRepository) private postRepo: PostRepository,
+    @InjectRepository(VoteRepository) private voteRepo: VoteRepository,
   ) {}
 
-  async vote(voting: VoteDto){ // user: UserEntity) {
+  async vote(voting: VoteDto, user: UserEntity) {
     const { identifier, slug, commentIdentifier, value } = voting;
 
     // Validate vote value
@@ -36,16 +45,23 @@ export class VoteService {
       let post = await this.postRepo.findOne({ where: {identifier, slug} });
       let vote: VotesEntity | undefined;
       let comment: CommentsEntity | undefined;
-
-      if (commentIdentifier) {
+      if (commentIdentifier  ) {
         // IF there is a comment identifier find vote by comment
         comment = await this.commentRepo.findOne({
           where:{ identifier: commentIdentifier }
         });
-        vote = await this.voteRepo.findOne( {relations: ['comment'] }) //user });
+        vote = await this.voteRepo.findOne({ 
+          where: { 
+            comment: comment,
+            users: user 
+          }})[0];
       } else {
         // Else find vote by post
-        vote = await this.voteRepo.findOne( {relations: ['post']}) // , user });
+        vote = await this.voteRepo.findOne({ 
+          where: { 
+            post: post, 
+            users: user
+        }})[0];
       }
 
       if (!vote && value === 0) {
@@ -69,16 +85,15 @@ export class VoteService {
         await vote.save();
       }
 
-      post = await this.postRepo.findOne({
-        where:{ identifier, slug },
-        relations: ['comments']
-      }///'comment.votes', 'sub', 'votes'] },
+      post = await this.postRepo.findOneOrFail({ 
+        where: { identifier, slug },
+        relations: ['comments', 'comments.votes', 'votes'] },
       );
-      // post.setUserVote(user);
-      // post.comment.forEach((c) => c.setUserVote(user));
+      post.setUserVote(user);
+      post.comments.forEach((c) => c.setUserVote(user));
 
-      return post;
-    } catch (err) {
+      return post;    } catch (err) {
+      console.log(err)
       throw new InternalServerErrorException();
     }
   }

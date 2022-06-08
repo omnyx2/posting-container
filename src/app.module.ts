@@ -4,8 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { CommentsModule } from './comments/comments.module';
 import { VoteModule } from './votes/vote.module';
-
-@Module({
+   @Module({
   imports: [ 
     TypeOrmModule.forRoot(),
     HttpModule,

@@ -18,6 +18,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import {GetUser} from 'src/util/authCtx';
+import UserEntity from 'src/entity/user.entity';
 
 
 @ApiTags('vote')
@@ -27,8 +29,13 @@ export class VoteController {
 
   @Post('/')
   // @UseGuards(AuthGuard())
-  vote(@Body(ValidationPipe) voting: VoteDto) { //@GetUser() user: UserEntity) {
-    return this.voteService.vote(voting ) //, user);
+  vote(
+    @Body(ValidationPipe) voting: VoteDto,
+    @GetUser() user: UserEntity 
+  ) {
+
+    console.log(voting)
+    return this.voteService.vote(voting, user); //, user);  
   }
 }
 
