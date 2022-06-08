@@ -5,14 +5,15 @@ import {
   Put,
   Delete,
   Controller,
-  Get, Param,
+  Get,
+  Param,
   Post,
   Query,
   UseGuards,
   ValidationPipe,
-} from '@nestjs/common';
-import { PostService } from './post.service';
-import { Response } from 'express';
+} from '@nestjs/common'
+import { PostService } from './post.service'
+import { Response } from 'express'
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -20,15 +21,18 @@ import {
   ApiBody,
   ApiResponse,
   ApiTags,
-} from '@nestjs/swagger';
+} from '@nestjs/swagger'
 
-import { CreatePostDto, DeletePostDto, GetPaginatedPostParamDto } from './post.dto';
-import { GetPostParamDto } from '../comments/comments.dto';
-import PostEntity from 'src/entity/post.entity';
+import {
+  CreatePostDto,
+  DeletePostDto,
+  GetPaginatedPostParamDto,
+} from './post.dto'
+import { GetPostParamDto } from '../comments/comments.dto'
+import PostEntity from 'src/entity/post.entity'
 
 @ApiTags('posts')
 @Controller('posts')
-
 export class PostController {
   constructor(private postService: PostService) {}
 
@@ -37,10 +41,10 @@ export class PostController {
   @ApiResponse({ status: 403, description: 'Forbidden' })
   //@UseGuard(JwtAuthGuard)
   getPosts(
-    @Query() post: GetPaginatedPostParamDto,
-   // @GetUser() user: UserEntity,
+    @Query() post: GetPaginatedPostParamDto
+    // @GetUser() user: UserEntity,
   ) {
-    return this.postService.getPosts(post);//, user);
+    return this.postService.getPosts(post) //, user);
   }
 
   @ApiResponse({
@@ -50,15 +54,15 @@ export class PostController {
   })
   @Get('/:identifier/:slug')
   //@UseGuards(JwtAuthGuard)
-  async getPost(@Param() getPostParam: GetPostParamDto) {//, @GetUser() user: UserEntity) {
-      const post = await this.postService.getPost(getPostParam)//, user);
-      console.log(post)
-      return post
+  async getPost(@Param() getPostParam: GetPostParamDto) {
+    //, @GetUser() user: UserEntity) {
+    const post = await this.postService.getPost(getPostParam) //, user);
+    console.log(post)
+    return post
   }
 
-  
   @Post()
-  @ApiBody({type: CreatePostDto})
+  @ApiBody({ type: CreatePostDto })
   @ApiResponse({
     status: 200,
     description: '성공',
@@ -66,22 +70,20 @@ export class PostController {
   })
   //@UseGuard(AuthGuard())
   createOne(
-    @Body() createPost: CreatePostDto,
-      //  @Body(ValidationPipe) createPost: CreatePostDto
+    @Body() createPost: CreatePostDto
+    //  @Body(ValidationPipe) createPost: CreatePostDto
     //
   ) {
-   return this.postService.createPost(createPost); 
+    return this.postService.createPost(createPost)
   }
 
   @Put('/:identifier/:slug')
-   @ApiResponse({
+  @ApiResponse({
     status: 200,
     description: '성공',
-    type: PostEntity
-  })//@UserGaurd()
-  updateOne(
-    @Body() createPost: CreatePostDto,
-    @Param() params) {
+    type: PostEntity,
+  }) //@UserGaurd()
+  updateOne(@Body() createPost: CreatePostDto, @Param() params) {
     return `update ${params.id}`
   }
 
@@ -89,11 +91,10 @@ export class PostController {
   @ApiResponse({
     status: 200,
     description: '성공',
-    type: DeletePostDto
+    type: DeletePostDto,
   })
   //@UserGaurd()
   deleteOne() {
-    return 'del';
+    return 'del'
   }
-
 }

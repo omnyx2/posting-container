@@ -1,21 +1,18 @@
-import { IsNumber, IsString, IsNotEmpty } from 'class-validator';
-import {
-  ApiProperty
-} from '@nestjs/swagger';
+import { IsNumber, IsString, IsNotEmpty } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class GetPaginatedPostParamDto {
-  
   @IsNumber()
   @ApiProperty()
-  page: number;
+  page: number
 
   @IsNumber()
   @ApiProperty()
-  count: number;
+  count: number
 
   constructor(page: number, count: number) {
-    this.page = page;
-    this.count = count;
+    this.page = page
+    this.count = count
   }
 }
 
@@ -23,45 +20,41 @@ export class CreatePostDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  title: string;
+  title: string
 
   @IsString()
   @ApiProperty()
-  body: string;
+  body: string
 
   @IsString()
   @ApiProperty()
-  sub: string;
+  sub: string
 
   constructor(title: string, body: string, sub: string) {
-    this.title = title;
-    this.body = body;
-    this.sub = sub;
+    this.title = title
+    this.body = body
+    this.sub = sub
   }
-
 }
 
 export class FindPostDto {
-  
   @IsString()
-  title: string;
-
+  title: string
 }
 
 export class DeletePostDto {
-  result: "Del post successed"
+  result: 'Del post successed'
 }
 
 export class GetPostParamDto {
   @IsString()
-  identifier: string;
+  identifier: string
 
   @IsString()
-  slug: string;
+  slug: string
 
   constructor(identifier: string, slug: string) {
-    this.identifier = identifier;
-    this.slug = slug;
+    this.identifier = identifier
+    this.slug = slug
   }
 }
-
