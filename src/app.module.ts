@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { HttpModule } from '@nestjs/axios'
 import { CommentsModule } from './comments/comments.module'
 import { VoteModule } from './votes/vote.module'
+import { UserModule } from './users/user.module'
+
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
@@ -11,6 +13,7 @@ import { VoteModule } from './votes/vote.module'
     PostModule,
     CommentsModule,
     VoteModule,
+    UserModule
   ],
 })
 export class AppModule {}
