@@ -5,8 +5,7 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToMany,
-} from 'typeorm'
+  OneToMany, } from 'typeorm'
 
 import { Exclude, Expose } from 'class-transformer'
 import Basee from './basee.entity'
@@ -46,9 +45,11 @@ export default class CommentEntity extends Basee {
   @OneToMany(() => VotesEntity, (vote) => vote.comment)
   votes: VotesEntity[]
 
-  @Expose() get voteScore(): number {
+  @Expose() 
+  get voteScore(): number {
     return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0)
   }
+
 
   // protected userVote: number;
   // setUserVote(user: UserEntity) {
