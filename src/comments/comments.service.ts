@@ -9,7 +9,6 @@ import { GetPostParamDto } from './comments.dto';
 import  CommentEntity from '../entity/comment.entity';
 import { Repository } from'typeorm';
 import PostEntity from '../entity/post.entity';
-
 @Injectable()
 export class CommentService {
 
@@ -50,7 +49,7 @@ export class CommentService {
       const post = await this.postRepo.findOne({ where: {identifier, slug} });
 
       const comments = await this.commentRepo.find({
-        relations: [ "post", 'votes'],
+        relations: [ "post", "votes"],
         order: { createAt: 'DESC' },
       //  relations: ['votes'],
       });
