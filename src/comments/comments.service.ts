@@ -42,7 +42,7 @@ export class CommentService {
     }
   }
 
-  async getPostComments(getPostParam: GetPostParamDto, user: UserEntity) {
+  async getPostComments(getPostParam: GetPostParamDto){ //, user: UserEntity) {
     const { identifier, slug } = getPostParam;
     try {
       const post = await this.postRepo.findOne({ where: {identifier, slug} });
@@ -53,9 +53,9 @@ export class CommentService {
         order: { createAt: 'DESC' },
       //  relations: ['votes'],
       });
-      if (user) {
-        comments.forEach((c) => c.setUserVote(user));
-      }
+      // if (user) {
+      //   comments.forEach((c) => c.setUserVote(user));
+      // }
       return comments;
     } catch (error) {
       

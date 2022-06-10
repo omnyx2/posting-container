@@ -42,6 +42,6 @@ export class CommentController {
     @Param() getPostParam: GetPostParamDto,
     @GetUser() user: UserEntity,
   ) {
-    return null; //this.commentService.getPostComments(getPostParam, user);
+    return this.commentService.getPostComments(getPostParam);
   }
 }
