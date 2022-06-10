@@ -54,6 +54,7 @@ export class VoteService {
             user: Equal(user),
           },
         })
+        console.log(vote)
       } else if (!!identifier) {
         // Else find vote by post
         vote = await this.voteRepo.findOne({
@@ -63,7 +64,7 @@ export class VoteService {
           },
         })
       }
-      console.log(user)
+        console.log(user)
       // 만약에 Vote가 없으면 에러 발생
       if (!vote && value === 0) {
         // if no vote and value = 0 return error

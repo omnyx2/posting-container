@@ -21,7 +21,8 @@ import VoteEntity from 'src/entity/vote.entity';
       CommentEntity,
  //     SubRepository,
       PostEntity,
-      VoteEntity
+      VoteEntity,
+      UserEntity
     ]),
  //   AuthModule,
   ],

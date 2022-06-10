@@ -1,5 +1,4 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
-import { getMaxListeners } from 'process'
 import UserEntity from 'src/entity/user.entity'
 
 export const GetUser = createParamDecorator(

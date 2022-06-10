@@ -14,6 +14,7 @@ import VotesEntity from './vote.entity'
 import UserEntity from './user.entity'
 
 import { v4 as uuid } from 'uuid'
+
 @Entity('comments')
 export default class CommentEntity extends Basee {
   constructor(comment: Partial<Comment>) {
@@ -31,12 +32,12 @@ export default class CommentEntity extends Basee {
   @Column()
   username: string
 
-  /* @anyToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: UserEntity;
-  */
+
   @ManyToOne(() => PostEntity, (post) => post.comments, { nullable: false })
-  post: PostEntity
+  post: PostEntity;
 
   // @ManyToOne(() => UserEntity, (user) => user.comments, { nullable: false})
   // user: UserEntity;

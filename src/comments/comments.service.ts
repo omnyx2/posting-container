@@ -1,14 +1,14 @@
 import {
-  BadRequestException,
-  Injectable,
+  BadRequestException, Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetPostParamDto } from './comments.dto';
 import  CommentEntity from '../entity/comment.entity';
-import { Repository } from'typeorm';
+import { Repository, Equal } from'typeorm';
 import PostEntity from '../entity/post.entity';
+import UserEntity from '../entity/user.entity';
 @Injectable()
 export class CommentService {
 
@@ -19,16 +19,15 @@ export class CommentService {
    
   async commentOnPost(
     getPostParam: GetPostParamDto,
-  //  user: UserEntity,
-    body: string,
-  ) {
+ //   user: UserEntity,
+    body: string,) {
     const { identifier, slug } = getPostParam;
     try {
       const post = await this.postRepo.findOne({ where: {identifier, slug} });
       const comment: Partial<CommentEntity> = {
         body,
-   //     user,
-        username: "writer",
+        username: "test",
+        //user,
         post,
       };
       console.log(comment)
@@ -43,19 +42,20 @@ export class CommentService {
     }
   }
 
-  async getPostComments(getPostParam: GetPostParamDto) {
+  async getPostComments(getPostParam: GetPostParamDto, user: UserEntity) {
     const { identifier, slug } = getPostParam;
     try {
       const post = await this.postRepo.findOne({ where: {identifier, slug} });
 
       const comments = await this.commentRepo.find({
-        relations: [ "post", "votes"],
+        where: { post: Equal(post) },
+        relations: [ "votes" ],
         order: { createAt: 'DESC' },
       //  relations: ['votes'],
       });
-      // if (user) {
-      //  comments.forEach((c) => c.setUserVote(user));
-      // }
+      if (user) {
+        comments.forEach((c) => c.setUserVote(user));
+      }
       return comments;
     } catch (error) {
       
