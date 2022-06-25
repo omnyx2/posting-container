@@ -16,7 +16,7 @@ import {
 import { GetPostParamDto, CreateCommentParamDto } from './comments.dto';
 import { CommentService } from './comments.service';
 
-import UserEntity from 'src/entity/comment.entity';
+import UserEntity from 'src/entity/user.entity';
 import { GetUser } from 'src/util/authCtx';
 
 @ApiTags('comments')
@@ -30,10 +30,11 @@ export class CommentController {
   // @UseGuards(AuthGuard())
   commentOnPost(
     @Param() getPostParam: GetPostParamDto,
-    @Body() body: { body: string },
     @GetUser() user: UserEntity,
+    @Body() body: { body: string },
   ) {
-    this.commentService.commentOnPost(getPostParam,  body.body);
+    console.log(user)
+    this.commentService.commentOnPost(getPostParam,  body.body, user);
   }
 
   @Get('/:identifier/:slug')
@@ -42,6 +43,6 @@ export class CommentController {
     @Param() getPostParam: GetPostParamDto,
     @GetUser() user: UserEntity,
   ) {
-    return this.commentService.getPostComments(getPostParam);
+    return this.commentService.getPostComments(getPostParam, user );
   }
 }

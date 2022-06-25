@@ -3,9 +3,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { GetPostParamDto } from './comments.dto';
-import  CommentEntity from '../entity/comment.entity';
+import { InjectRepository } from '@nestjs/typeorm'; import { GetPostParamDto } from './comments.dto'; import  CommentEntity from '../entity/comment.entity';
 import { Repository, Equal } from'typeorm';
 import PostEntity from '../entity/post.entity';
 import UserEntity from '../entity/user.entity';
@@ -14,20 +12,20 @@ export class CommentService {
 
   constructor(
     @InjectRepository(CommentEntity) private commentRepo: Repository<CommentEntity>,
-    @InjectRepository(PostEntity) private postRepo: Repository<PostEntity>
+    @InjectRepository(PostEntity) private postRepo: Repository<PostEntity>,
   ){}
    
   async commentOnPost(
     getPostParam: GetPostParamDto,
- //   user: UserEntity,
-    body: string,) {
+    body: string,
+    user: UserEntity) {
     const { identifier, slug } = getPostParam;
+    console.log(user)
     try {
       const post = await this.postRepo.findOne({ where: {identifier, slug} });
       const comment: Partial<CommentEntity> = {
         body,
-        username: "test",
-        //user,
+        user,
         post,
       };
       console.log(comment)
@@ -42,8 +40,9 @@ export class CommentService {
     }
   }
 
-  async getPostComments(getPostParam: GetPostParamDto){ //, user: UserEntity) {
+  async getPostComments(getPostParam: GetPostParamDto, user?: UserEntity) {
     const { identifier, slug } = getPostParam;
+    
     try {
       const post = await this.postRepo.findOne({ where: {identifier, slug} });
 
